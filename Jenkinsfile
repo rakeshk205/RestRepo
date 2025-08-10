@@ -19,8 +19,14 @@ pipeline {
         }
 
         stage('Build Jar') {
+            agent {
+                docker {
+                    image 'maven:3.8.7-openjdk-17' // Use suitable Maven + JDK version
+                    args '-v $HOME/.m2:/root/.m2'  // Optional: cache Maven dependencies
+                }
+            }
             steps {
-                sh "mvn clean package -P${params.ENV}"
+                sh 'mvn clean package -Pdev'
             }
         }
 
