@@ -13,7 +13,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   springboot-app:
-    build: .
+    image: rakeshk459/restservice:${VERSION}-${ENV}
     ports:
       - "8080:8080"
     depends_on:
