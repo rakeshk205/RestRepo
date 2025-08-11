@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhubdesk-creds')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         IMAGE_NAME = "rakeshk459/restservice"
     }
     stage('Clean Workspace') {
@@ -44,7 +44,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhubdesk-creds') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
                         docker.image("${IMAGE_NAME}:${params.VERSION}-${params.ENV}").push()
                     }
                 }
