@@ -10,6 +10,11 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubdesk-creds')
         IMAGE_NAME = "rakeshk459/restservice"
     }
+    stage('Clean Workspace') {
+      steps {
+        deleteDir()  // Jenkins Pipeline step to delete current workspace directory
+      }
+    }
 
     stages {
         stage('Checkout') {
