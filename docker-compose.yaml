@@ -13,7 +13,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   springboot-app:
-    image: rakeshk459/restservice:${VERSION}-${ENV}
+    image: rakeshk459/restservice:0.0.1-SNAPSHOT
     ports:
       - "8080:8080"
     depends_on:
@@ -22,5 +22,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
+
 volumes:
   pgdata:
