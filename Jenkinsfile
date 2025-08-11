@@ -5,6 +5,7 @@ pipeline {
         choice(name: 'ENV', choices: ['dev', 'uat', 'prod'], description: 'Select target environment')
         string(name: 'VERSION', defaultValue: 'latest', description: 'Docker image version/tag')
     }
+    
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
