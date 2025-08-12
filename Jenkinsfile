@@ -18,14 +18,10 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Docker info') {
-          steps {
-            sh 'docker info'
-          }
-        }
+
         stage('Build Jar') {
           steps {
-            sh 'mvn clean package -Pdev'
+            sh 'mvn clean package'
           }
         }
 
