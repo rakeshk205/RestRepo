@@ -10,11 +10,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubdesk-creds')
         IMAGE_NAME = "rakeshk459/restservice"
     }
-stage('Docker info') {
-  steps {
-    sh 'docker info'
-  }
-}
+
 
     stages {
         stage('Checkout') {
@@ -22,11 +18,17 @@ stage('Docker info') {
                 checkout scm
             }
         }
+        stage('Docker info') {
+          steps {
+            sh 'docker info'
+          }
+        }
         stage('Build Jar') {
           steps {
             sh 'mvn clean package -Pdev'
           }
         }
+
 
 //         stage('Build Jar') {
 //           steps {
