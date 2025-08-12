@@ -19,11 +19,6 @@ pipeline {
             }
         }
 
-//         stage('Build Jar') {
-//           steps {
-//             sh 'mvn clean package'
-//           }
-//         }
 
 
         stage('Build Jar') {
