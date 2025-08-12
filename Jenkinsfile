@@ -19,22 +19,22 @@ pipeline {
             }
         }
 
-        stage('Build Jar') {
-          steps {
-            sh 'mvn clean package'
-          }
-        }
-
-
 //         stage('Build Jar') {
 //           steps {
-//             script {
-//               docker.image('maven:3.9.9-openjdk-17').inside('-v $HOME/.m2:/root/.m2') {
-//                 sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1 }'
-//               }
-//             }
+//             sh 'mvn clean package'
 //           }
 //         }
+
+
+        stage('Build Jar') {
+          steps {
+            script {
+              docker.image('maven:3.9.9-openjdk-17').inside('-v $HOME/.m2:/root/.m2') {
+                sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1 }'
+              }
+            }
+          }
+        }
 
         stage('Push Docker Image') {
             steps {
