@@ -10,7 +10,11 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubdesk-creds')
         IMAGE_NAME = "rakeshk459/restservice"
     }
-
+stage('Docker info') {
+  steps {
+    sh 'docker info'
+  }
+}
 
     stages {
         stage('Checkout') {
@@ -18,16 +22,21 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Build Jar') {
           steps {
-            script {
-              docker.image('maven:3.9.9-openjdk-17').inside('-v $HOME/.m2:/root/.m2') {
-                sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1 }'
-              }
-            }
+            sh 'mvn clean package -Pdev'
           }
         }
+
+//         stage('Build Jar') {
+//           steps {
+//             script {
+//               docker.image('maven:3.9.9-openjdk-17').inside('-v $HOME/.m2:/root/.m2') {
+//                 sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1 }'
+//               }
+//             }
+//           }
+//         }
 
         stage('Push Docker Image') {
             steps {
