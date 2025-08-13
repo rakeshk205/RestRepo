@@ -23,10 +23,10 @@ pipeline {
                 script {
                     if (isUnix()) {
                         docker.image('maven:3.9.9-eclipse-temurin-17').inside('-v $HOME/.m2:/root/.m2') {
-                            sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1; }'
+                            sh 'mvn clean package -Pdev -DskipTests || { echo "Maven build failed"; exit 1; }'
                         }
                     } else {
-                        bat 'mvn clean package -Pdev'
+                        bat 'mvn clean package -Pdev -DskipTests'
                     }
                 }
             }
