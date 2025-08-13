@@ -11,7 +11,6 @@ pipeline {
         IMAGE_NAME = "rakeshk459/restservice"
     }
 
-
     stages {
         stage('Checkout') {
             steps {
@@ -19,16 +18,28 @@ pipeline {
             }
         }
 
-
-
         stage('Build Jar') {
-          steps {
-            script {
-              docker.image('maven:3.9.9-eclipse-temurin-17').inside('-v $HOME/.m2:/root/.m2') {
-                sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1 }'
-              }
+            steps {
+                script {
+                    if (isUnix()) {
+                        // Linux/Docker agent
+                        docker.image('maven:3.9.9-eclipse-temurin-17').inside('-v $HOME/.m2:/root/.m2') {
+                            sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1; }'
+                        }
+                    } else {
+                        // Windows agent
+                        bat 'mvn clean package -Pdev'
+                    }
+                }
             }
-          }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${IMAGE_NAME}:${params.VERSION}-${params.ENV}")
+                }
+            }
         }
 
         stage('Push Docker Image') {
@@ -48,7 +59,7 @@ pipeline {
                         input message: 'Approve deployment to PRODUCTION?', ok: 'Deploy'
                     }
                     echo "Deploying to ${params.ENV} environment..."
-                    // Add your deployment scripts here (kubectl, helm, ssh, etc)
+                    // Add deployment scripts here (kubectl, helm, ssh, etc.)
                 }
             }
         }
