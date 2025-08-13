@@ -18,7 +18,7 @@ services:
       retries: 5
 
   springboot-app:
-    image: rakeshk459/restservice:0.0.1-SNAPSHOT
+    image: rakeshk459/restservice:${VERSION}-${ENV}
     ports:
       - "8080:8080"
     depends_on:
@@ -31,7 +31,7 @@ services:
     command: >
       sh -c "
         echo 'Checking Postgres readiness...';
-        until nc -z postgres 5432; do
+        until pg_isready -h postgres -U myuser -d mydb; do
           echo 'Waiting for Postgres to be ready...';
           sleep 2;
         done;

@@ -22,12 +22,10 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        // Linux/Docker agent
                         docker.image('maven:3.9.9-eclipse-temurin-17').inside('-v $HOME/.m2:/root/.m2') {
                             sh 'mvn clean package -Pdev || { echo "Maven build failed"; exit 1; }'
                         }
                     } else {
-                        // Windows agent
                         bat 'mvn clean package -Pdev'
                     }
                 }
@@ -52,14 +50,19 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy with Docker Compose') {
             steps {
                 script {
-                    if (params.ENV == 'prod') {
-                        input message: 'Approve deployment to PRODUCTION?', ok: 'Deploy'
+                    // Pass VERSION and ENV to docker compose
+                    def composeEnv = "VERSION=${params.VERSION} ENV=${params.ENV}"
+
+                    if (isUnix()) {
+                        sh "${composeEnv} docker compose down || true"
+                        sh "${composeEnv} docker compose up -d --build"
+                    } else {
+                        bat "${composeEnv} docker compose down || exit 0"
+                        bat "${composeEnv} docker compose up -d --build"
                     }
-                    echo "Deploying to ${params.ENV} environment..."
-                    // Add deployment scripts here (kubectl, helm, ssh, etc.)
                 }
             }
         }
