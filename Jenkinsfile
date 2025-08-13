@@ -9,6 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubdesk-creds')
         IMAGE_NAME = "rakeshk459/restservice"
+        DOCKER_HOST = "tcp://localhost:2375"
     }
 
     stages {
