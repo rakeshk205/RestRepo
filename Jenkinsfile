@@ -54,15 +54,18 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 script {
-                    // Pass VERSION and ENV to docker compose
-                    def composeEnv = "VERSION=${params.VERSION} ENV=${params.ENV}"
-
-                    if (isUnix()) {
-                        sh "${composeEnv} docker compose down || true"
-                        sh "${composeEnv} docker compose up -d --build"
-                    } else {
-                        bat "${composeEnv} docker compose down || exit 0"
-                        bat "${composeEnv} docker compose up -d --build"
+                    withEnv(["VERSION=${params.VERSION}", "ENV=${params.ENV}"]) {
+                        if (isUnix()) {
+                            sh '''
+                            docker compose down || true
+                            docker compose up -d --build
+                            '''
+                        } else {
+                            bat '''
+                            docker compose down || exit 0
+                            docker compose up -d --build
+                            '''
+                        }
                     }
                 }
             }
